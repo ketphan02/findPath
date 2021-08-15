@@ -6,7 +6,7 @@ export interface SquareProps {
   x: number;
   y: number;
   grids: Array<Array<React.MutableRefObject<number | null>>>;
-  turn: 0 | 1 | 2;
+  turn: -1 | 0 | 1 | 2;
 }
 
 const useStyles = makeStyles((theme) => ({

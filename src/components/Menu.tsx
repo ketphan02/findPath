@@ -4,8 +4,8 @@ import { makeStyles, Grid, Typography } from '@material-ui/core';
 import ColorCard from './Card';
 
 export interface MenuProps {
-  card: 0 | 1 | 2 ;
-  setCard: React.Dispatch<React.SetStateAction<0 | 1 | 2>>;
+  card: -1 | 0 | 1 | 2 ;
+  setCard: React.Dispatch<React.SetStateAction< -1 | 0 | 1 | 2 >>;
 }
 
 const useStyles = makeStyles(() => ({

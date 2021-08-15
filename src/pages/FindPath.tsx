@@ -6,7 +6,7 @@ import Menu from '../components/Menu';
 
 const useStyles = makeStyles((theme) => ({
   gamepad: {
-    backgroundColor: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+    // backgroundColor: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     padding: theme.spacing(1),
   },
   menu: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FindPath = () => {
   const classes = useStyles();
-  const [card, setCard] = React.useState<0 | 1 | 2>(0);
+  const [card, setCard] = React.useState< -1 | 0 | 1 | 2 >(0);
 
   return (
     <Grid container sm>

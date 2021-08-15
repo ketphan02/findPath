@@ -1,6 +1,6 @@
 {
-  "homepage": "http://ketphan02.github.io/tiktaktoe",
-  "name": "tik-tak-too",
+  "homepage": "http://ketphan02.github.io/findPath",
+  "name": "find-path",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

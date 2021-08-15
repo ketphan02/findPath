@@ -5,7 +5,7 @@ import Square from './Square';
 
 export interface GridProps {
   length: number;
-  turn: 0 | 1 | 2 ;
+  turn: -1 | 0 | 1 | 2 ;
 }
 
 const useStyles = makeStyles((theme) => ({

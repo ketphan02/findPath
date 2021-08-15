@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-// import ButtonBase from '@material-ui/core/ButtonBase';
-import { Box } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  makeStyles,
+} from '@material-ui/core';
 
 export interface CardProps {
   colorName: string;

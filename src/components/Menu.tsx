@@ -1,14 +1,20 @@
 import * as React from 'react';
-import { makeStyles, Grid, Typography } from '@material-ui/core';
+import {
+  makeStyles,
+  Grid,
+  Typography,
+  Button,
+} from '@material-ui/core';
 
 import ColorCard from './Card';
+import { SquareType } from './GameGrid';
 
 export interface MenuProps {
-  card: -1 | 0 | 1 | 2 ;
-  setCard: React.Dispatch<React.SetStateAction< -1 | 0 | 1 | 2 >>;
+  card: SquareType;
+  setCard: React.Dispatch<React.SetStateAction<SquareType>>;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   wrapper: {
     display: 'flex',
     height: '100%',
@@ -16,6 +22,14 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     marginTop: '1rem',
+  },
+  btn: {
+    backgroundColor: theme.palette.warning.main,
+    color: theme.palette.common.white,
+    '&:hover': {
+      // color: theme.palette.common.black,
+      backgroundColor: theme.palette.warning.dark,
+    },
   },
 }));
 
@@ -53,6 +67,24 @@ const Menu: React.FC<MenuProps> = ({ card, setCard }: MenuProps) => {
             isChoosed={card === 2}
             onClick={() => setCard(2)}
           />
+        </Grid>
+        {/* Create a button in the middle of the grid */}
+        <Grid item xs={12}>
+          <Grid
+            container
+            spacing={0}
+            direction='column'
+            alignItems='center'
+            justify='center'
+          >
+            <Button
+              className={classes.btn}
+              variant='contained'
+              onClick={() => setCard(-1)} // This will run the program
+            >
+              RUN ALGO
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

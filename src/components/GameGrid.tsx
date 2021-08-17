@@ -3,9 +3,11 @@ import { makeStyles } from '@material-ui/core';
 
 import Square from './Square';
 
+export type SquareType = null | -1 | 0 | 1 | 2;
+
 export interface GridProps {
   length: number;
-  turn: -1 | 0 | 1 | 2 ;
+  turn: SquareType;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -26,18 +28,20 @@ const useStyles = makeStyles((theme) => ({
 
 const GameGrid = ({ length, turn }: GridProps) => {
   const classes = useStyles();
-  const grids = Array.from({ length }, () => Array.from({ length }, () => React.useRef(null)));
+  const grid = Array.from({ length }, () => Array.from({ length }, () => React.useState<SquareType>(null)));
+  const gridValues = grid.map((row) => row.map((val) => val[0]));
+  const gridChanges = grid.map((row) => row.map((val) => val[1]));
+  // const input = React.useRef(null);
 
   return (
     <div className={classes.root}>
-      {grids.map((row, i: number) => (
+      {grid.map((row, i: number) => (
         <div className={classes.row}>
-          {row.map((entry, j: number) => (
+          {row.map((_, j: number) => (
             <Square
               length={length}
-              x={i}
-              y={j}
-              grids={grids}
+              sq={gridValues[i][j]}
+              changeSq={gridChanges[i][j]}
               turn={turn}
             />
           ))}

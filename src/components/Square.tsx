@@ -1,17 +1,24 @@
 import * as React from 'react';
 import { Paper, makeStyles } from '@material-ui/core';
 
+import { SquareType } from './GameGrid';
+
 export interface SquareProps {
   length: number;
-  x: number;
-  y: number;
-  grids: Array<Array<React.MutableRefObject<number | null>>>;
-  turn: -1 | 0 | 1 | 2;
+  sq: SquareType;
+  changeSq: React.Dispatch<React.SetStateAction<SquareType>>;
+  turn: SquareType;
 }
 
 const useStyles = makeStyles((theme) => ({
   square: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: ({ sq }: SquareProps) => {
+      if (sq === null) return theme.palette.background.default;
+      if (sq === 0) return theme.palette.secondary.main;
+      if (sq === 1) return theme.palette.primary.main;
+      if (sq === 2) return theme.palette.common.black;
+      return theme.palette.warning.light;
+    },
     borderRadius: theme.shape.borderRadius,
     borderColor: 'black',
     borderStyle: 'solid',
@@ -20,71 +27,38 @@ const useStyles = makeStyles((theme) => ({
     width: ({ length }: SquareProps) => window.innerHeight / (length * 1.3),
     height: ({ length }: SquareProps) => window.innerHeight / (length * 1.3),
     '&:hover': {
-      backgroundColor: ({
-        x,
-        y,
-        grids,
-        turn,
-      }: SquareProps) => {
-        if (grids[x][y].current === null) {
-          if (turn === 0) return theme.palette.secondary.main;
-          if (turn === 1) return theme.palette.primary.main;
-          return theme.palette.common.black;
-        }
-        if (grids[x][y].current === 0) return theme.palette.secondary.main;
-        if (grids[x][y].current === 1) return theme.palette.primary.main;
+      backgroundColor: ({ turn }: SquareProps) => {
+        if (turn === 0) return theme.palette.secondary.main;
+        if (turn === 1) return theme.palette.primary.main;
         return theme.palette.common.black;
       },
     },
-  },
-  cur: {
-    backgroundColor: theme.palette.secondary.main,
-  },
-  tar: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  obs: {
-    backgroundColor: theme.palette.common.black,
   },
 }));
 
 const Square: React.FC<SquareProps> = ({
   length,
-  x,
-  y,
-  grids,
+  sq,
+  changeSq,
   turn,
 }: SquareProps) => {
   const classes = useStyles({
     length,
-    x,
-    y,
-    grids,
+    sq,
+    changeSq,
     turn,
   });
-  const [colorClass, setColorClass] = React.useState<string>('');
 
   const onClickSquare = () => {
-    if (grids[x][y].current === null) {
-      if (turn === 0) {
-        grids[x][y].current = 0;
-        setColorClass(classes.cur);
-      } else if (turn === 1) {
-        grids[x][y].current = 1;
-        setColorClass(classes.tar);
-      } else {
-        grids[x][y].current = 2;
-        setColorClass(classes.obs);
-      }
+    if (sq === null || sq !== turn) {
+      changeSq(turn);
+    } else {
+      changeSq(null);
     }
   };
 
   return (
-    <Paper
-      elevation={0}
-      className={`${classes.square} ${colorClass}`}
-      onClick={onClickSquare}
-    />
+    <Paper elevation={0} className={classes.square} onClick={onClickSquare} />
   );
 };
 

@@ -4,6 +4,9 @@ import { useSnackbar } from 'notistack';
 
 import Square, { IOState } from './Square';
 
+// import naiveApproach from '../algorithms/test';
+import dfsApproach from '../algorithms/dfs';
+
 export type SquareType = null | -1 | 0 | 1 | 2;
 
 export interface GridProps {
@@ -27,40 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function timeout(delay: number) {
-  return new Promise((res) => setTimeout(res, delay));
-}
-
-const naive = async (
-  inSq: null | [number, number],
-  outSq: null | [number, number],
-  grid: Array<Array<SquareType>>,
-  gridChange: Array<Array<React.Dispatch<React.SetStateAction<SquareType>>>>,
-) => {
-  if (!(inSq && outSq && grid && gridChange)) {
-    return false;
-  }
-  let i = inSq[0];
-  while (i !== outSq[0]) {
-    if (grid[i][inSq[1]] === null) {
-      gridChange[i][inSq[1]](-1);
-    }
-    if (inSq[0] < outSq[0]) ++i;
-    else --i;
-    await timeout(0.15);
-  }
-  let j = inSq[1];
-  while (j !== outSq[1]) {
-    if (grid[outSq[0]][j] === null) {
-      gridChange[outSq[0]][j](-1);
-    }
-    if (inSq[1] < outSq[1]) ++j;
-    else --j;
-    await timeout(0.15);
-  }
-  return true;
-};
-
 const GameGrid = ({ length, turn }: GridProps) => {
   const classes = useStyles();
 
@@ -72,6 +41,18 @@ const GameGrid = ({ length, turn }: GridProps) => {
   const grid = Array.from({ length }, () => Array.from({ length }, () => React.useState<SquareType>(null)));
   const gridValues = grid.map((row) => row.map((val) => val[0]));
   const gridChanges = grid.map((row) => row.map((val) => val[1]));
+
+  const resetGrid = async () => {
+    gridChanges.forEach((row, i) => row.forEach((val, j) => {
+      if (gridValues[i][j] === -1) {
+        val(null);
+      }
+    }));
+  };
+
+  React.useEffect(() => {
+    resetGrid();
+  }, [inSq.loc.current, outSq.loc.current]);
 
   // Snackbar
   const { enqueueSnackbar } = useSnackbar();
@@ -99,8 +80,9 @@ const GameGrid = ({ length, turn }: GridProps) => {
         <Button
           variant='contained'
           color='primary'
-          onClick={() => {
-            if (!naive(inSq.loc.current, outSq.loc.current, gridValues, gridChanges)) {
+          onClick={async () => {
+            await resetGrid();
+            if (!(await dfsApproach(inSq.loc.current, outSq.loc.current, gridValues, gridChanges))) {
               enqueueSnackbar('No input or output found');
             }
           }}

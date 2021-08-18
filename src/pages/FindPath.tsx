@@ -21,7 +21,7 @@ const FindPath = () => {
   const [card, setCard] = React.useState<SquareType>(0);
 
   return (
-    <Grid container sm>
+    <Grid container spacing={2}>
       <Grid item xs={3} className={classes.menu}>
         <Menu card={card} setCard={setCard} />
       </Grid>

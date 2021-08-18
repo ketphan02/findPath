@@ -75,7 +75,7 @@ const Menu: React.FC<MenuProps> = ({ card, setCard }: MenuProps) => {
             spacing={0}
             direction='column'
             alignItems='center'
-            justify='center'
+            justifyContent='center'
           >
             <Button
               className={classes.btn}

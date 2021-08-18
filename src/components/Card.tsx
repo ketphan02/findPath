@@ -71,7 +71,7 @@ const Card: React.FC<CardProps> = ({
           <Grid item xs={4}>
             <Box className={classes.image} />
           </Grid>
-          <Grid item xs={8} sm container>
+          <Grid item xs={8} sm>
             <Typography
               variant='body1'
               align='center'

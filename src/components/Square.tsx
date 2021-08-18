@@ -3,11 +3,21 @@ import { Paper, makeStyles } from '@material-ui/core';
 
 import { SquareType } from './GameGrid';
 
+export type IOState = {
+  loc: React.MutableRefObject<null | [number, number]>;
+  color: React.MutableRefObject<null | React.Dispatch<
+    React.SetStateAction<SquareType>
+  >>;
+};
+
 export interface SquareProps {
   length: number;
   sq: SquareType;
   changeSq: React.Dispatch<React.SetStateAction<SquareType>>;
   turn: SquareType;
+  loc: [number, number];
+  inSq: IOState;
+  outSq: IOState;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -41,18 +51,39 @@ const Square: React.FC<SquareProps> = ({
   sq,
   changeSq,
   turn,
+  loc,
+  inSq,
+  outSq,
 }: SquareProps) => {
+  // const [x, y] = loc;
+  // console.log(x, y);
   const classes = useStyles({
     length,
     sq,
     changeSq,
     turn,
+    loc,
+    inSq,
+    outSq,
   });
 
   const onClickSquare = () => {
     if (sq === null || sq !== turn) {
+      if (turn === 0) {
+        if (inSq.color.current !== null) inSq.color.current(null);
+        inSq.color.current = changeSq;
+        inSq.loc.current = loc;
+      } else if (turn === 1) {
+        if (outSq.color.current !== null) outSq.color.current(null);
+        outSq.color.current = changeSq;
+        outSq.loc.current = loc;
+      }
       changeSq(turn);
     } else {
+      if (turn === 0 || turn === 1) {
+        inSq.loc.current = null;
+        inSq.color.current = null;
+      }
       changeSq(null);
     }
   };

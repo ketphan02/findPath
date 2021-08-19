@@ -16,17 +16,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export type Algorithms = null | 'BFS' | 'DFS';
+
 const FindPath = () => {
   const classes = useStyles();
   const [card, setCard] = React.useState<SquareType>(0);
+  const [algo, setAlgo] = React.useState<Algorithms>(null);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={3} className={classes.menu}>
-        <Menu card={card} setCard={setCard} />
+        <Menu card={card} setCard={setCard} setAlgo={setAlgo} />
       </Grid>
       <Grid item xs={9} className={classes.gamepad}>
-        <GameGrid length={20} turn={card} />
+        <GameGrid length={20} turn={card} algo={algo} />
       </Grid>
     </Grid>
   );

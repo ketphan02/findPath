@@ -4,14 +4,20 @@ import {
   Grid,
   Typography,
   Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@material-ui/core';
 
 import ColorCard from './Card';
 import { SquareType } from './GameGrid';
+import { Algorithms } from '../pages/FindPath';
 
 export interface MenuProps {
   card: SquareType;
   setCard: React.Dispatch<React.SetStateAction<SquareType>>;
+  setAlgo: React.Dispatch<React.SetStateAction<Algorithms>>;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -31,10 +37,21 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.warning.dark,
     },
   },
+  selectAlgo: {
+    marginBottom: '1rem',
+    // width: '100%',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '100%',
+  },
 }));
 
-const Menu: React.FC<MenuProps> = ({ card, setCard }: MenuProps) => {
+const Menu: React.FC<MenuProps> = ({ card, setCard, setAlgo }: MenuProps) => {
   const classes = useStyles();
+
+  const [pendingAlgo, setPendingAlgo] = React.useState<String | null>(null);
+
   return (
     <Grid container spacing={2} className={classes.wrapper}>
       <Grid item xs={12}>
@@ -68,7 +85,37 @@ const Menu: React.FC<MenuProps> = ({ card, setCard }: MenuProps) => {
             onClick={() => setCard(2)}
           />
         </Grid>
-        {/* Create a button in the middle of the grid */}
+
+        <Grid item xs={12}>
+          <Grid
+            container
+            spacing={0}
+            direction='column'
+            alignItems='center'
+            justifyContent='center'
+          >
+            <FormControl variant='outlined' className={classes.formControl}>
+              <InputLabel id='demo-simple-select-outlined-label'>
+                Algorithm
+              </InputLabel>
+              <Select
+                // native
+                value={pendingAlgo}
+                onChange={(e) => setPendingAlgo(e.target.value as string)}
+                variant='filled'
+                className={classes.selectAlgo}
+              >
+                <MenuItem value='BFS'>
+                  Breath First Sort
+                </MenuItem>
+                <MenuItem value='DFS'>
+                  Deep First Sort
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+
         <Grid item xs={12}>
           <Grid
             container
@@ -80,7 +127,7 @@ const Menu: React.FC<MenuProps> = ({ card, setCard }: MenuProps) => {
             <Button
               className={classes.btn}
               variant='contained'
-              onClick={() => setCard(-1)} // This will run the program
+              onClick={() => setAlgo(pendingAlgo as Algorithms)} // This will run the program
             >
               RUN ALGO
             </Button>

@@ -24,15 +24,14 @@ const dfs = async (
   }
   if (bestRoute.val.length !== 0 && bestRoute.val.length < route.length) return null;
 
-  const { length } = grid;
   if (!visited) {
-    visited = Array.from({ length }).map(() => Array.from({ length }).map(() => false));
+    visited = Array.from({ length: grid.length }).map(() => Array.from({ length: grid.length }).map(() => false));
   }
 
   if (outSq[0] === inSq[0] && outSq[1] === inSq[1]) {
-    if (bestRoute.val.length < route.length) {
+    if ((bestRoute.val.length !== 0 && bestRoute.val.length > route.length) || (bestRoute.val.length === 0)) {
       bestRoute.val = route;
-      alert(route);
+      alert(bestRoute.val);
       // TO DO: highlight the route
     }
     return true;
@@ -40,7 +39,8 @@ const dfs = async (
   const [x, y] = inSq;
 
   if (grid[x][y] === null) gridChange[x][y](-1);
-  await timeout(0.1);
+  visited[x][y] = true;
+  await timeout(0.0000000000000001);
 
   for (let i = 0; i < 4; ++i) {
     const u = x + r[i];
@@ -49,14 +49,15 @@ const dfs = async (
       if (grid[u][v] !== -1 && grid[u][v] !== 2 && visited[u][v] === false) {
         const newVisit = [...route];
         newVisit.push([u, v]);
-        visited[u][v] = true;
         await dfs([u, v], outSq, grid, gridChange, newVisit, bestRoute, visited);
-        visited[u][v] = false;
       }
     }
   }
-  if (grid[x][y] === -1) gridChange[x][y](null);
-  await timeout(0.1);
+  if (grid[x][y] === -1 || grid[x][y] === null) {
+    gridChange[x][y](null);
+  }
+  visited[x][y] = false;
+  // await timeout(0.00001);
   return true;
 };
 

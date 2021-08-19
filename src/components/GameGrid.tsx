@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { Button, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 
 import Square, { IOState } from './Square';
+import { Algorithms } from '../pages/FindPath';
 
-// import naiveApproach from '../algorithms/test';
 import dfsApproach from '../algorithms/dfs';
+import bfsApproach from '../algorithms/bfs';
 
 export type SquareType = null | -1 | 0 | 1 | 2;
 
 export interface GridProps {
   length: number;
   turn: SquareType;
+  algo: Algorithms;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -30,8 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GameGrid = ({ length, turn }: GridProps) => {
+const GameGrid = ({ length, turn, algo }: GridProps) => {
   const classes = useStyles();
+
+  // Snackbar
+  const { enqueueSnackbar } = useSnackbar();
 
   // Starting points
   const inSq: IOState = { loc: React.useRef(null), color: React.useRef(null) };
@@ -54,8 +59,23 @@ const GameGrid = ({ length, turn }: GridProps) => {
     resetGrid();
   }, [inSq.loc.current, outSq.loc.current]);
 
-  // Snackbar
-  const { enqueueSnackbar } = useSnackbar();
+  React.useEffect(() => {
+    if (algo) {
+      if (algo === 'BFS') {
+        if (!inSq.loc.current || !outSq.loc.current) {
+          enqueueSnackbar('No input or output found');
+        } else {
+          bfsApproach(inSq.loc.current, outSq.loc.current, gridValues, gridChanges);
+        }
+      } else if (algo === 'DFS') {
+        if (!inSq.loc.current || !outSq.loc.current) {
+          enqueueSnackbar('No input or output found');
+        } else {
+          dfsApproach(inSq.loc.current, outSq.loc.current, gridValues, gridChanges);
+        }
+      }
+    }
+  }, [algo]);
 
   return (
     <>
@@ -75,20 +95,6 @@ const GameGrid = ({ length, turn }: GridProps) => {
             ))}
           </div>
         ))}
-      </div>
-      <div>
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={async () => {
-            await resetGrid();
-            if (!(await dfsApproach(inSq.loc.current, outSq.loc.current, gridValues, gridChanges))) {
-              enqueueSnackbar('No input or output found');
-            }
-          }}
-        >
-          RUN
-        </Button>
       </div>
     </>
   );

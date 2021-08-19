@@ -22,7 +22,7 @@ const dfs = async (
   if (!(inSq && outSq && grid && gridChange)) {
     return false;
   }
-  if (bestRoute.val.length !== 0 && bestRoute.val.length < route.length) return null;
+  if (bestRoute.val.length !== 0 && bestRoute.val.length <= route.length) return null;
 
   if (!visited) {
     visited = Array.from({ length: grid.length }).map(() => Array.from({ length: grid.length }).map(() => false));
@@ -57,7 +57,7 @@ const dfs = async (
     gridChange[x][y](null);
   }
   visited[x][y] = false;
-  // await timeout(0.00001);
+  await timeout(0.0000000000000001);
   return true;
 };
 
